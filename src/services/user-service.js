@@ -1,6 +1,9 @@
 const {UserRepository} = require('../repositories');
 const {StatusCodes} = require('http-status-codes');
+const {auth} = require('../utils/common');
+const bcrypt = require('bcrypt');
 const AppError = require('../utils/errors/app-error');
+
 
 const userRepo = new UserRepository();
 
@@ -23,6 +26,29 @@ async function createUser(data){
 
 }
 
-module.exports = {
-    createUser
+async function signIn(data){
+    try {
+        const user = await userRepo.getUserByEmail(data.email);
+        if(!user){
+            throw new AppError('No user found for the given email',StatusCodes.NOT_FOUND);
+        };
+        const passwordMatch = auth.checkPassword(user.password,data.password);
+        if(!passwordMatch){
+            throw new AppError('Invalid Request',StatusCodes.BAD_REQUEST);
+        };
+        const jwt = auth.createToken({id:user.id,email:user.email});
+        return jwt;
+    } catch (error) {
+        if(error instanceof AppError) throw error;
+        console.error('Error during signIn:', error); // Log the error for debugging
+        throw new AppError('Internal Server Error',StatusCodes.INTERNAL_SERVER_ERROR);
+    }
 }
+
+
+module.exports = {
+    createUser,
+    signIn
+}
+
+

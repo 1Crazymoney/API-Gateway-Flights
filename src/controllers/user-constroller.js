@@ -3,7 +3,7 @@ const {UserService} = require('../services');
 const { response } = require('express');
 const { error } = require('winston');
 
-const {SuccessResponse,ErrorResponse} = require('../Utils/common');
+const {SuccessResponse,ErrorResponse} = require('../utils/common');
 
 
 /**
@@ -31,7 +31,31 @@ async function signUp(req, res) {
     }
 
 }
+
+async function signIn(req, res) {
+    try {
+        const user = await UserService.signIn({
+            email: req.body.email,
+            password: req.body.password
+        });
+        SuccessResponse.data = user;
+        return res
+            .status(StatusCodes.CREATED)
+            .json(SuccessResponse);
+    } catch (error) {
+        ErrorResponse.error = error;
+        return res
+            .status(error.statusCode)
+            .json(ErrorResponse);
+
+
+    }
+
+}
+
+
 module.exports = {
-    signUp
+    signUp,
+    signIn
 
 }

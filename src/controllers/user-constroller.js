@@ -1,16 +1,13 @@
-const {StatusCodes} = require('http-status-codes');
-const {UserService} = require('../services');
-const { response } = require('express');
-const { error } = require('winston');
+const { StatusCodes } = require('http-status-codes');
 
-const {SuccessResponse,ErrorResponse} = require('../utils/common');
+const { UserService } = require('../services');
+const { SuccessResponse, ErrorResponse } = require('../utils/common');
 
 
 /**
- * POST: /signup
- * req-body {email:'sample-email@gmail.com',password:'Sample@2324'}
+ * POST : /signup 
+ * req-body {email: 'a@b.com', password: '1234'}
  */
-
 async function signUp(req, res) {
     try {
         const user = await UserService.createUser({
@@ -19,18 +16,15 @@ async function signUp(req, res) {
         });
         SuccessResponse.data = user;
         return res
-            .status(StatusCodes.CREATED)
-            .json(SuccessResponse);
-    } catch (error) {
+                .status(StatusCodes.CREATED)
+                .json(SuccessResponse);
+    } catch(error) {
         console.log(error);
         ErrorResponse.error = error;
         return res
-            .status(error.statusCode)
-            .json(ErrorResponse);
-
-
+                .status(error.statusCode)
+                .json(ErrorResponse);
     }
-
 }
 
 async function signIn(req, res) {
@@ -41,22 +35,39 @@ async function signIn(req, res) {
         });
         SuccessResponse.data = user;
         return res
-            .status(StatusCodes.CREATED)
-            .json(SuccessResponse);
-    } catch (error) {
+                .status(StatusCodes.CREATED)
+                .json(SuccessResponse);
+    } catch(error) {
+        console.log(error);
         ErrorResponse.error = error;
         return res
-            .status(error.statusCode)
-            .json(ErrorResponse);
-
-
+                .status(error.statusCode)
+                .json(ErrorResponse);
     }
+}
 
+async function addRoleToUser(req, res) {
+    try {
+        const user = await UserService.addRoletoUser({
+            role: req.body.role,
+            id: req.body.id
+        });
+        SuccessResponse.data = user;
+        return res
+                .status(StatusCodes.CREATED)
+                .json(SuccessResponse);
+    } catch(error) {
+        console.log(error);
+        ErrorResponse.error = error;
+        return res
+                .status(error.statusCode)
+                .json(ErrorResponse);
+    }
 }
 
 
 module.exports = {
     signUp,
-    signIn
-
+    signIn,
+    addRoleToUser
 }

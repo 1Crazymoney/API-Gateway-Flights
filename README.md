@@ -8,12 +8,18 @@ This project is a User Authentication Service built using Node.js and Sequelize 
 - Email validation to ensure proper email format.
 - Password encryption using bcrypt for secure storage.
 - JWT for secure and efficient user authentication.
+Authorization check for adding roles to enhance security.
+- Default customer role during signup to streamline the user onboarding process.
+- Models for a many-to-many association between roles and users to facilitate complex user management scenarios.
+- Rate limiter and proxy to improve API performance and security by managing the rate of incoming requests.
 
 ## Technologies Used
 - Node.js
 - Sequelize ORM
 - bcrypt for password encryption
 - JSON Web Tokens (JWT)
+Rate limiting tools
+- Proxy servers for improved security and load handling
 
 ## Latest Updates
 - Added JWT support for enhanced security in user authentication. This allows the server to issue tokens to users upon successful authentication, which are required for subsequent requests to protected routes.

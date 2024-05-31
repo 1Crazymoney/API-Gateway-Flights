@@ -1,31 +1,33 @@
-const {UserRepository} = require('../repositories');
+const {UserRepository,RoleRepository} = require('../repositories');
 const {StatusCodes} = require('http-status-codes');
-const {auth} = require('../utils/common');
+const {auth,enums} = require('../utils/common');
 const bcrypt = require('bcrypt');
 const AppError = require('../utils/errors/app-error');
+const {Role} = require('../models');
 
 
 const userRepo = new UserRepository();
+const roleRepo = new RoleRepository();
 
 async function createUser(data){
     try {
         const user = await userRepo.create(data);
+        const role = await roleRepo.getRoleByName(enums.USER_ROLES_ENUMS.CUSTOMER);
+        user.addRole(role);
         return user;
     } catch (error) {
-        if (error.name =='SequelizeValidationError' || 'SequelizeUniqueConstraintError'){
-            let explanation =[];
-            error.errors.forEach((err)=>{
-                explanation.push(err.message);
-            })
-            throw new AppError(explanation,StatusCodes.BAD_REQUEST);
+        if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+            let explanation = [];
+            if (error.errors && Array.isArray(error.errors)) {
+                error.errors.forEach((err) => {
+                    explanation.push(err.message);
+                });
+            }
+            throw new AppError(explanation.join(', '), StatusCodes.BAD_REQUEST);
         }
-        throw new AppError('Cannot create a new user object',StatusCodes.INTERNAL_SERVER_ERROR);
-        
+        throw new AppError('Cannot create a new user object', StatusCodes.INTERNAL_SERVER_ERROR);
     }
-
-
 }
-
 async function signIn(data){
     try {
         const user = await userRepo.getUserByEmail(data.email);

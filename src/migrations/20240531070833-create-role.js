@@ -13,9 +13,9 @@ module.exports = {
       },
       name: {
         type: Sequelize.ENUM,
-        values: [ADMIN,CUSTOMER,FLIGHT_COMPANY],
-        allowNull:false,
-        defaultValue:CUSTOMER
+        values: [ADMIN, CUSTOMER, FLIGHT_COMPANY],
+        defaultValue: CUSTOMER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

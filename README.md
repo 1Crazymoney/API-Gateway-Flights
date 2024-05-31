@@ -18,7 +18,7 @@ Authorization check for adding roles to enhance security.
 - Sequelize ORM
 - bcrypt for password encryption
 - JSON Web Tokens (JWT)
-Rate limiting tools
+- Rate limiting tools
 - Proxy servers for improved security and load handling
 
 ## Latest Updates
